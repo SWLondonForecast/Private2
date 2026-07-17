@@ -261,6 +261,72 @@ body.light .panel{ background: linear-gradient(155deg, rgba(255,255,255,.5), tra
 .reaction-btn{width:100%;margin-top:12px;padding:11px;border:1px solid var(--line);border-radius:12px;background:var(--glass-strong);font-weight:600}.theme-stage .minigame{min-width:0}
 @media(max-width:720px){.games-grid{grid-template-columns:1fr}.status-page{padding:8px}.status-page-head{border-radius:22px}.status-frame-card iframe{height:calc(100vh - 126px);min-height:480px}}
 
+
+/* ============ REGION PICKER ============ */
+.region-picker{
+  display:flex;align-items:center;gap:9px;padding:5px 6px 5px 12px;
+  border:1px solid var(--line);border-radius:999px;background:var(--glass-strong)
+}
+.region-picker label{
+  font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--text-3);white-space:nowrap
+}
+.region-select{
+  min-width:138px;padding:8px 31px 8px 12px;border:0;border-radius:999px;
+  color:#101423;background-color:var(--accent);font-size:.8rem;font-weight:700;
+  appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:
+    linear-gradient(45deg,transparent 50%,#101423 50%),
+    linear-gradient(135deg,#101423 50%,transparent 50%);
+  background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;
+  background-size:5px 5px;background-repeat:no-repeat
+}
+.region-select option{color:#101423;background:#fff}
+@media(max-width:560px){
+  .region-picker{width:100%;justify-content:space-between;border-radius:16px}
+  .region-select{min-width:132px}
+}
+
+
+/* Reliable settings switches */
+.switch{
+  z-index:2;
+  cursor:pointer;
+  user-select:none;
+  -webkit-user-select:none;
+}
+.switch input{
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  cursor:pointer;
+  z-index:3;
+}
+.switch i{
+  pointer-events:none;
+}
+.p-row{
+  position:relative;
+}
+
+
+.status-nav-btn{
+  width:auto;
+  padding:0 13px;
+  gap:7px;
+  display:flex;
+}
+.status-nav-label{
+  font-size:.76rem;
+  font-weight:700;
+  white-space:nowrap;
+}
+@media(max-width:520px){
+  .status-nav-btn{width:40px;padding:0;display:grid}
+  .status-nav-label{display:none}
+}
+
 </style>
 </head>
 <body>
@@ -272,7 +338,7 @@ body.light .panel{ background: linear-gradient(155deg, rgba(255,255,255,.5), tra
       <button class="icon-btn" id="refresh-btn" aria-label="Refresh">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v6h-6"/></svg>
       </button>
-      <button class="icon-btn" id="status-btn" aria-label="Status Site" title="Status Site">
+      <button class="icon-btn status-nav-btn" id="status-btn" aria-label="Status Site" title="Status Site">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><path d="M6 16V9"/><path d="M10 16V5"/><path d="M14 16v-4"/><path d="M18 16V7"/></svg>
       </button>
       <button class="icon-btn" id="settings-btn" aria-label="Settings">
@@ -283,10 +349,19 @@ body.light .panel{ background: linear-gradient(155deg, rgba(255,255,255,.5), tra
 
   <header class="hero glass">
     <div class="hero-top">
-      <div class="eyebrow">Live · Open‑Meteo</div>
-      <div class="loc-switch" id="loc-switch">
-        <button data-region="london" class="active">London</button>
-        <button data-region="somerset">Somerset</button>
+      <div class="eyebrow">Live forecast · Open‑Meteo</div>
+      <div class="region-picker">
+        <label for="region-select">Forecast region</label>
+        <select id="region-select" class="region-select" aria-label="Choose forecast region">
+          <option value="london">London</option>
+          <option value="somerset">Somerset</option>
+          <option value="yorkshire">Yorkshire</option>
+          <option value="scotland">Scotland</option>
+          <option value="wales">Wales</option>
+          <option value="sussex">Sussex</option>
+          <option value="devon">Devon</option>
+          <option value="cornwall">Cornwall</option>
+        </select>
       </div>
     </div>
     <div class="readout">
@@ -381,14 +456,14 @@ body.light .panel{ background: linear-gradient(155deg, rgba(255,255,255,.5), tra
 
   </section>
 
-  <footer>Weather data from Open‑Meteo · Updates automatically every 15 minutes</footer>
+  <footer>Live weather data from Open‑Meteo · Eight UK regions · Updates every 15 minutes</footer>
 </div>
 
 <div class="status-page" id="status-page" aria-hidden="true">
   <div class="status-page-inner">
     <div class="status-page-head glass"><div class="status-page-title"><span class="brand-dot"></span><div><strong>Status Site</strong><span>Live service health and maintenance updates</span></div></div><button class="icon-btn" id="close-status" aria-label="Close Status Site"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-    <div class="status-frame-card glass"><iframe id="status-frame" src="https://brixstudios.statuspage.io/" title="Service status site" loading="lazy"></iframe></div>
-    <p class="status-fallback">If the embedded page does not load, <a href="https://brixstudios.statuspage.io/" target="_blank" rel="noopener">open the status site in a new tab</a>.</p>
+    <div class="status-frame-card glass"><iframe id="status-frame" src="https://swlforecast.betteruptime.com/" title="Service status site" loading="lazy"></iframe></div>
+    <p class="status-fallback">If the embedded page does not load, <a href="https://swlforecast.betteruptime.com/" target="_blank" rel="noopener">open the status site in a new tab</a>.</p>
   </div>
 </div>
 
@@ -422,14 +497,14 @@ body.light .panel{ background: linear-gradient(155deg, rgba(255,255,255,.5), tra
 
   <div class="p-group">
     <div class="p-title">Sections</div>
-    <div class="p-row"><div class="p-copy"><strong>News</strong></div><span class="switch"><input type="checkbox" id="show-news" checked><i></i></span></div>
-    <div class="p-row"><div class="p-copy"><strong>Radar &amp; maps</strong></div><span class="switch"><input type="checkbox" id="show-maps" checked><i></i></span></div>
+    <div class="p-row"><div class="p-copy"><strong>News</strong></div><label class="switch" for="show-news"><input type="checkbox" id="show-news" checked><i aria-hidden="true"></i></label></div>
+    <div class="p-row"><div class="p-copy"><strong>Radar &amp; maps</strong></div><label class="switch" for="show-maps"><input type="checkbox" id="show-maps" checked><i aria-hidden="true"></i></label></div>
   </div>
 
   <div class="p-group">
     <div class="p-title">Summer event theme</div>
-    <div class="p-row"><div class="p-copy"><strong>World football</strong><span>Pitch wallpaper + 2 football games</span></div><span class="switch"><input type="checkbox" id="theme-football"><i></i></span></div>
-    <div class="p-row"><div class="p-copy"><strong>Summer wrestling</strong><span>Arena wallpaper + 2 wrestling games</span></div><span class="switch"><input type="checkbox" id="theme-wrestling"><i></i></span></div>
+    <div class="p-row"><div class="p-copy"><strong>World football</strong><span>Pitch wallpaper + 2 football games</span></div><label class="switch" for="theme-football"><input type="checkbox" id="theme-football"><i aria-hidden="true"></i></label></div>
+    <div class="p-row"><div class="p-copy"><strong>Summer wrestling</strong><span>Arena wallpaper + 2 wrestling games</span></div><label class="switch" for="theme-wrestling"><input type="checkbox" id="theme-wrestling"><i aria-hidden="true"></i></label></div>
   </div>
 
   <button class="reset-btn" id="reset-btn" type="button">Restore defaults</button>
@@ -457,14 +532,57 @@ const regions = {
     {id:"london", name:"London Central", lat:51.5074, lon:-0.1278},
     {id:"hyde", name:"Hyde Park", lat:51.5073, lon:-0.1657},
     {id:"westminster", name:"Westminster", lat:51.4994, lon:-0.1245},
-    {id:"swindon", name:"Swindon", lat:51.5558, lon:-1.7798}
+    {id:"croydon", name:"Croydon", lat:51.3762, lon:-0.0982},
+    {id:"richmond", name:"Richmond", lat:51.4613, lon:-0.3037}
   ],
   somerset: [
-    {id:"taunton", name:"Taunton", lat:51.019, lon:-3.1},
-    {id:"yeovil", name:"Yeovil", lat:50.9416, lon:-2.6323},
-    {id:"ilminster", name:"Ilminster", lat:50.927, lon:-2.91},
-    {id:"crewkerne", name:"Crewkerne", lat:50.883, lon:-2.795},
-    {id:"shepton", name:"Shepton Mallet", lat:51.192, lon:-2.546}
+    {id:"taunton", name:"Taunton", lat:51.0153, lon:-3.1030},
+    {id:"yeovil", name:"Yeovil", lat:50.9416, lon:-2.6321},
+    {id:"ilminster", name:"Ilminster", lat:50.9268, lon:-2.9101},
+    {id:"crewkerne", name:"Crewkerne", lat:50.8829, lon:-2.7950},
+    {id:"wells", name:"Wells", lat:51.2093, lon:-2.6470}
+  ],
+  yorkshire: [
+    {id:"leeds", name:"Leeds", lat:53.8008, lon:-1.5491},
+    {id:"york", name:"York", lat:53.9590, lon:-1.0815},
+    {id:"sheffield", name:"Sheffield", lat:53.3811, lon:-1.4701},
+    {id:"hull", name:"Hull", lat:53.7676, lon:-0.3274},
+    {id:"scarborough", name:"Scarborough", lat:54.2831, lon:-0.3998}
+  ],
+  scotland: [
+    {id:"edinburgh", name:"Edinburgh", lat:55.9533, lon:-3.1883},
+    {id:"glasgow", name:"Glasgow", lat:55.8642, lon:-4.2518},
+    {id:"aberdeen", name:"Aberdeen", lat:57.1497, lon:-2.0943},
+    {id:"inverness", name:"Inverness", lat:57.4778, lon:-4.2247},
+    {id:"dundee", name:"Dundee", lat:56.4620, lon:-2.9707}
+  ],
+  wales: [
+    {id:"cardiff", name:"Cardiff", lat:51.4816, lon:-3.1791},
+    {id:"swansea", name:"Swansea", lat:51.6214, lon:-3.9436},
+    {id:"newport", name:"Newport", lat:51.5842, lon:-2.9977},
+    {id:"aberystwyth", name:"Aberystwyth", lat:52.4153, lon:-4.0829},
+    {id:"bangor", name:"Bangor", lat:53.2274, lon:-4.1293}
+  ],
+  sussex: [
+    {id:"brighton", name:"Brighton", lat:50.8225, lon:-0.1372},
+    {id:"chichester", name:"Chichester", lat:50.8367, lon:-0.7792},
+    {id:"worthing", name:"Worthing", lat:50.8179, lon:-0.3729},
+    {id:"eastbourne", name:"Eastbourne", lat:50.7680, lon:0.2905},
+    {id:"hastings", name:"Hastings", lat:50.8543, lon:0.5735}
+  ],
+  devon: [
+    {id:"exeter", name:"Exeter", lat:50.7184, lon:-3.5339},
+    {id:"plymouth", name:"Plymouth", lat:50.3755, lon:-4.1427},
+    {id:"brixham", name:"Brixham", lat:50.3943, lon:-3.5150},
+    {id:"torquay", name:"Torquay", lat:50.4619, lon:-3.5253},
+    {id:"barnstaple", name:"Barnstaple", lat:51.0802, lon:-4.0581}
+  ],
+  cornwall: [
+    {id:"truro", name:"Truro", lat:50.2632, lon:-5.0510},
+    {id:"falmouth", name:"Falmouth", lat:50.1526, lon:-5.0663},
+    {id:"newquay", name:"Newquay", lat:50.4155, lon:-5.0737},
+    {id:"stives", name:"St Ives", lat:50.2084, lon:-5.4909},
+    {id:"penzance", name:"Penzance", lat:50.1188, lon:-5.5376}
   ]
 };
 
@@ -517,11 +635,24 @@ async function fetchWeather(place){
   };
 }
 
+const regionDisplayNames = {
+  london:"London",
+  somerset:"Somerset",
+  yorkshire:"Yorkshire",
+  scotland:"Scotland",
+  wales:"Wales",
+  sussex:"Sussex",
+  devon:"Devon",
+  cornwall:"Cornwall"
+};
+
 let currentWeatherByPlace = {};
 
 async function renderRegion(region){
+  if(!regions[region]) region = "london";
   settings.region = region;
-  document.querySelectorAll("#loc-switch button").forEach(b=>b.classList.toggle("active", b.dataset.region===region));
+  const regionSelect = $("#region-select");
+  if(regionSelect) regionSelect.value = region;
 
   const places = regions[region];
   const primary = places[0];
@@ -548,7 +679,7 @@ async function renderRegion(region){
     $("#hero-cond").textContent = "Unavailable";
   }
 
-  $("#places-title").textContent = `More in ${region==="london"?"London":"Somerset"}`;
+  $("#places-title").textContent = `More in ${regionDisplayNames[region] || region}`;
   const rest = results.slice(1);
   $("#places").innerHTML = rest.map(({p,w})=>{
     if(!w) return `<div class="place-card glass"><div class="name">${esc(p.name)}</div><div class="row"><span class="temp">—</span></div></div>`;
@@ -607,14 +738,16 @@ function renderNews(){
 function syncPanel(){
   $("#theme-select").value = settings.theme;
   $("#unit-select").value = settings.unit;
-  $("#show-news").checked = settings.showNews;
-  $("#show-maps").checked = settings.showMaps;
-  $("#theme-football").checked = settings.eventTheme==="football";
-  $("#theme-wrestling").checked = settings.eventTheme==="wrestling";
+  if($("#show-news")) $("#show-news").checked = Boolean(settings.showNews);
+  if($("#show-maps")) $("#show-maps").checked = Boolean(settings.showMaps);
+  if($("#theme-football")) $("#theme-football").checked = settings.eventTheme==="football";
+  if($("#theme-wrestling")) $("#theme-wrestling").checked = settings.eventTheme==="wrestling";
   document.querySelectorAll("[data-wp]").forEach(b=> b.setAttribute("aria-pressed", String(b.dataset.wp===settings.wallpaper)));
 }
 
 function applyAll(){
+  if(!regions[settings.region]) settings.region="london";
+  if($("#region-select")) $("#region-select").value=settings.region;
   document.body.classList.toggle("light", settings.theme==="light");
   ["default","dusk","ember","tide","pitch","arena"].forEach(w=>document.body.classList.toggle(`wp-${w}`, settings.wallpaper===w && w!=="default"));
   document.getElementById("news-block").classList.toggle("hidden", !settings.showNews);
@@ -641,22 +774,45 @@ function closePanel(){ $("#panel").classList.remove("open"); $("#backdrop").clas
 
 $("#theme-select").addEventListener("change", e=>{ settings.theme=e.target.value; applyAll(); save("Theme updated"); });
 $("#unit-select").addEventListener("change", e=>{ settings.unit=e.target.value; save(); renderRegion(settings.region); });
-$("#show-news").addEventListener("change", e=>{ settings.showNews=e.target.checked; applyAll(); save(); });
-$("#show-maps").addEventListener("change", e=>{ settings.showMaps=e.target.checked; applyAll(); save(); });
+function bindSettingSwitch(id, handler){
+  const input = $(id);
+  if(!input) return;
+  input.addEventListener("change", event=>{
+    handler(event.target.checked);
+    applyAll();
+    save("Setting updated");
+  });
+}
+
+bindSettingSwitch("#show-news", checked=>{
+  settings.showNews = checked;
+});
+
+bindSettingSwitch("#show-maps", checked=>{
+  settings.showMaps = checked;
+});
 
 document.querySelectorAll("[data-wp]").forEach(btn=>{
   btn.addEventListener("click", ()=>{ settings.wallpaper=btn.dataset.wp; applyAll(); save("Wallpaper updated"); });
 });
 
-$("#theme-football").addEventListener("change", e=>{
-  settings.eventTheme = e.target.checked ? "football" : "none";
-  if(e.target.checked){ settings.wallpaper="pitch"; $("#theme-wrestling").checked=false; }
-  applyAll(); save(e.target.checked ? "World football theme on" : "Theme off");
+bindSettingSwitch("#theme-football", checked=>{
+  if(checked){
+    settings.eventTheme = "football";
+    settings.wallpaper = "pitch";
+  }else if(settings.eventTheme === "football"){
+    settings.eventTheme = "none";
+    settings.wallpaper = "default";
+  }
 });
-$("#theme-wrestling").addEventListener("change", e=>{
-  settings.eventTheme = e.target.checked ? "wrestling" : "none";
-  if(e.target.checked){ settings.wallpaper="arena"; $("#theme-football").checked=false; }
-  applyAll(); save(e.target.checked ? "Summer wrestling theme on" : "Theme off");
+bindSettingSwitch("#theme-wrestling", checked=>{
+  if(checked){
+    settings.eventTheme = "wrestling";
+    settings.wallpaper = "arena";
+  }else if(settings.eventTheme === "wrestling"){
+    settings.eventTheme = "none";
+    settings.wallpaper = "default";
+  }
 });
 
 $("#reset-btn").addEventListener("click", ()=>{
@@ -666,8 +822,10 @@ $("#reset-btn").addEventListener("click", ()=>{
 
 $("#refresh-btn").addEventListener("click", ()=>{ renderRegion(settings.region); toast("Weather refreshed"); });
 
-document.querySelectorAll("#loc-switch button").forEach(btn=>{
-  btn.addEventListener("click", ()=> renderRegion(btn.dataset.region));
+$("#region-select").addEventListener("change", event=>{
+  settings.region = event.target.value;
+  save();
+  renderRegion(settings.region);
 });
 document.querySelectorAll("#places .place-card")?.forEach(()=>{});
 
