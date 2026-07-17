@@ -2584,10 +2584,69 @@
       }
     }
 
+  
+    /* Downtime screen */
+    .downtime-screen{
+      position:fixed;inset:0;z-index:9999;display:grid;place-items:center;
+      padding:24px;background:
+      radial-gradient(circle at 20% 15%,rgba(87,188,255,.32),transparent 34%),
+      radial-gradient(circle at 82% 22%,rgba(120,94,255,.26),transparent 32%),
+      linear-gradient(150deg,#020813,#07172a 48%,#111532);
+      opacity:0;visibility:hidden;pointer-events:none;
+      transition:opacity .35s ease,visibility .35s ease
+    }
+    .downtime-screen.visible{opacity:1;visibility:visible;pointer-events:auto}
+    .downtime-card{
+      width:min(680px,100%);padding:clamp(30px,6vw,58px);text-align:center;
+      border-radius:36px;border:1px solid rgba(255,255,255,.2);
+      background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.055));
+      box-shadow:0 35px 100px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.2);
+      -webkit-backdrop-filter:blur(34px) saturate(170%);
+      backdrop-filter:blur(34px) saturate(170%)
+    }
+    .downtime-icon{
+      width:86px;height:86px;margin:0 auto 24px;display:grid;place-items:center;
+      border:1px solid rgba(255,255,255,.24);border-radius:28px;
+      background:rgba(255,255,255,.1);font-size:2.5rem;
+      animation:downtimePulse 2.8s ease-in-out infinite
+    }
+    .downtime-badge{
+      display:inline-flex;align-items:center;gap:8px;margin-bottom:17px;
+      padding:8px 13px;border:1px solid rgba(255,195,88,.32);border-radius:999px;
+      color:#ffd58b;background:rgba(255,163,38,.1);font-size:.76rem;
+      font-weight:800;letter-spacing:.09em;text-transform:uppercase
+    }
+    .downtime-badge-dot{width:8px;height:8px;border-radius:50%;background:#ffb340;box-shadow:0 0 15px rgba(255,179,64,.85)}
+    .downtime-card h1{color:white;font-size:clamp(2.5rem,8vw,5.2rem);line-height:.96;letter-spacing:-.065em}
+    .downtime-card p{max-width:510px;margin:20px auto 0;color:rgba(225,239,255,.72);font-size:clamp(.95rem,2vw,1.08rem);line-height:1.65}
+    .downtime-progress{height:8px;margin:28px auto 0;overflow:hidden;border-radius:999px;background:rgba(255,255,255,.1)}
+    .downtime-progress::after{content:"";display:block;width:42%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#62d7ff,#8877ff);animation:downtimeProgress 2.1s ease-in-out infinite alternate}
+    .downtime-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:28px}
+    .downtime-return{padding:12px 17px;color:white;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.22);border-radius:15px;background:rgba(255,255,255,.11)}
+    .downtime-return:hover{background:rgba(255,255,255,.17)}
+    .downtime-small{margin-top:17px!important;color:rgba(225,239,255,.45)!important;font-size:.75rem!important}
+    body.downtime-active{overflow:hidden}
+    @keyframes downtimePulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+    @keyframes downtimeProgress{from{transform:translateX(-15%)}to{transform:translateX(155%)}}
+
   </style>
 </head>
 
 <body>
+  <div class="downtime-screen" id="downtime-screen" role="dialog" aria-modal="true" aria-labelledby="downtime-title" aria-hidden="true">
+    <div class="downtime-card">
+      <div class="downtime-icon" aria-hidden="true">🛠️</div>
+      <div class="downtime-badge"><span class="downtime-badge-dot"></span>Scheduled maintenance</div>
+      <h1 id="downtime-title">Downtime is underway.</h1>
+      <p>SWLondon Forecast is currently receiving improvements and maintenance. The website will be available again as soon as the work is complete.</p>
+      <div class="downtime-progress" aria-hidden="true"></div>
+      <div class="downtime-actions">
+        <button type="button" class="downtime-return" id="disable-downtime-button">End preview and return to website</button>
+      </div>
+      <p class="downtime-small">Weather services may be temporarily unavailable during this period.</p>
+    </div>
+  </div>
+
   <div class="weather-particles" id="weather-particles" aria-hidden="true"></div>
   <div class="rainbow-arc" aria-hidden="true"></div>
   <div class="container">
@@ -3383,6 +3442,21 @@
       <div class="setting-note">
         Only one Summer Event theme can be active at a time. These switches do not add or change any autumn, Halloween or Christmas settings.
       </div>
+    </div>
+
+
+    <div class="settings-group" id="downtime-settings-group">
+      <div class="settings-group-title">Website availability</div>
+      <label class="setting-row">
+        <span class="setting-copy">
+          <strong>Downtime Screen</strong>
+          <span>Cover the website with a maintenance message until this is switched off.</span>
+        </span>
+        <span class="switch">
+          <input type="checkbox" id="downtime-setting">
+          <span class="switch-track"></span>
+        </span>
+      </label>
     </div>
 
     <button
@@ -5418,6 +5492,34 @@ function applyTheme() {
     }, 15 * 60 * 1000);
 
     setInterval(updateTimeGlow, 60 * 1000);
-  </script>
+  
+    /* Downtime screen controls */
+    const downtimeScreen = document.getElementById("downtime-screen");
+    const downtimeSetting = document.getElementById("downtime-setting");
+    const disableDowntimeButton = document.getElementById("disable-downtime-button");
+
+    function setDowntimeState(enabled) {
+      localStorage.setItem("swLondonDowntime", String(enabled));
+      downtimeScreen?.classList.toggle("visible", enabled);
+      downtimeScreen?.setAttribute("aria-hidden", String(!enabled));
+      document.body.classList.toggle("downtime-active", enabled);
+      if (downtimeSetting) downtimeSetting.checked = enabled;
+    }
+
+    downtimeSetting?.addEventListener("change", event => {
+      setDowntimeState(event.target.checked);
+      if (typeof showToast === "function") {
+        showToast(event.target.checked ? "Downtime screen enabled" : "Downtime screen disabled");
+      }
+    });
+
+    disableDowntimeButton?.addEventListener("click", () => {
+      setDowntimeState(false);
+      if (typeof showToast === "function") showToast("Downtime ended");
+    });
+
+    setDowntimeState(localStorage.getItem("swLondonDowntime") === "true");
+
+</script>
 </body>
 </html>
