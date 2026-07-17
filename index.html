@@ -2585,66 +2585,163 @@
     }
 
   
-    /* Downtime screen */
-    .downtime-screen{
-      position:fixed;inset:0;z-index:9999;display:grid;place-items:center;
-      padding:24px;background:
-      radial-gradient(circle at 20% 15%,rgba(87,188,255,.32),transparent 34%),
-      radial-gradient(circle at 82% 22%,rgba(120,94,255,.26),transparent 32%),
-      linear-gradient(150deg,#020813,#07172a 48%,#111532);
-      opacity:0;visibility:hidden;pointer-events:none;
-      transition:opacity .35s ease,visibility .35s ease
+    /* ==========================================================
+       CODE-CONTROLLED MAINTENANCE MODE
+       Change MAINTENANCE_MODE in the script to true or false.
+       This is deliberately not available inside Settings.
+       ========================================================== */
+    .maintenance-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      overflow: auto;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(79, 168, 255, .36), transparent 34%),
+        radial-gradient(circle at 82% 18%, rgba(120, 91, 255, .28), transparent 32%),
+        linear-gradient(150deg, #020713, #08182c 52%, #10152d);
     }
-    .downtime-screen.visible{opacity:1;visibility:visible;pointer-events:auto}
-    .downtime-card{
-      width:min(680px,100%);padding:clamp(30px,6vw,58px);text-align:center;
-      border-radius:36px;border:1px solid rgba(255,255,255,.2);
-      background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.055));
-      box-shadow:0 35px 100px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.2);
-      -webkit-backdrop-filter:blur(34px) saturate(170%);
-      backdrop-filter:blur(34px) saturate(170%)
+
+    body.maintenance-active {
+      overflow: hidden !important;
     }
-    .downtime-icon{
-      width:86px;height:86px;margin:0 auto 24px;display:grid;place-items:center;
-      border:1px solid rgba(255,255,255,.24);border-radius:28px;
-      background:rgba(255,255,255,.1);font-size:2.5rem;
-      animation:downtimePulse 2.8s ease-in-out infinite
+
+    body.maintenance-active .maintenance-screen {
+      display: grid;
     }
-    .downtime-badge{
-      display:inline-flex;align-items:center;gap:8px;margin-bottom:17px;
-      padding:8px 13px;border:1px solid rgba(255,195,88,.32);border-radius:999px;
-      color:#ffd58b;background:rgba(255,163,38,.1);font-size:.76rem;
-      font-weight:800;letter-spacing:.09em;text-transform:uppercase
+
+    body.maintenance-active > *:not(.maintenance-screen) {
+      visibility: hidden !important;
+      pointer-events: none !important;
+      user-select: none !important;
     }
-    .downtime-badge-dot{width:8px;height:8px;border-radius:50%;background:#ffb340;box-shadow:0 0 15px rgba(255,179,64,.85)}
-    .downtime-card h1{color:white;font-size:clamp(2.5rem,8vw,5.2rem);line-height:.96;letter-spacing:-.065em}
-    .downtime-card p{max-width:510px;margin:20px auto 0;color:rgba(225,239,255,.72);font-size:clamp(.95rem,2vw,1.08rem);line-height:1.65}
-    .downtime-progress{height:8px;margin:28px auto 0;overflow:hidden;border-radius:999px;background:rgba(255,255,255,.1)}
-    .downtime-progress::after{content:"";display:block;width:42%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#62d7ff,#8877ff);animation:downtimeProgress 2.1s ease-in-out infinite alternate}
-    .downtime-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:28px}
-    .downtime-return{padding:12px 17px;color:white;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.22);border-radius:15px;background:rgba(255,255,255,.11)}
-    .downtime-return:hover{background:rgba(255,255,255,.17)}
-    .downtime-small{margin-top:17px!important;color:rgba(225,239,255,.45)!important;font-size:.75rem!important}
-    body.downtime-active{overflow:hidden}
-    @keyframes downtimePulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-    @keyframes downtimeProgress{from{transform:translateX(-15%)}to{transform:translateX(155%)}}
+
+    body.maintenance-active .maintenance-screen,
+    body.maintenance-active .maintenance-screen * {
+      visibility: visible !important;
+      pointer-events: auto !important;
+      user-select: auto !important;
+    }
+
+    .maintenance-card {
+      width: min(680px, 100%);
+      padding: clamp(28px, 6vw, 52px);
+      text-align: center;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 36px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.13), rgba(255,255,255,.045));
+      box-shadow:
+        0 35px 100px rgba(0,0,0,.48),
+        inset 0 1px 0 rgba(255,255,255,.2);
+      backdrop-filter: blur(34px) saturate(170%);
+      -webkit-backdrop-filter: blur(34px) saturate(170%);
+    }
+
+    .maintenance-logo {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 22px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 24px;
+      font-size: 2rem;
+      background: rgba(255,255,255,.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.2);
+    }
+
+    .maintenance-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding: 8px 13px;
+      border: 1px solid rgba(99,212,255,.35);
+      border-radius: 999px;
+      color: #a9ebff;
+      background: rgba(50,164,225,.12);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .maintenance-card h1 {
+      color: white;
+      font-size: clamp(2.4rem, 7vw, 4.6rem);
+      line-height: .96;
+      letter-spacing: -.065em;
+    }
+
+    .maintenance-card p {
+      max-width: 520px;
+      margin: 18px auto 0;
+      color: rgba(224,239,255,.72);
+      line-height: 1.65;
+    }
+
+    .maintenance-progress {
+      height: 9px;
+      margin-top: 28px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,.1);
+    }
+
+    .maintenance-progress span {
+      display: block;
+      width: 68%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #58cfff, #8c78ff);
+      animation: maintenancePulse 2.4s ease-in-out infinite;
+    }
+
+    .maintenance-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 9px;
+      margin-top: 22px;
+    }
+
+    .maintenance-meta span {
+      padding: 9px 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 999px;
+      color: rgba(225,239,255,.66);
+      background: rgba(255,255,255,.065);
+      font-size: .78rem;
+    }
+
+    @keyframes maintenancePulse {
+      0%, 100% { transform: translateX(-14%); opacity: .75; }
+      50% { transform: translateX(55%); opacity: 1; }
+    }
 
   </style>
 </head>
 
 <body>
-  <div class="downtime-screen" id="downtime-screen" role="dialog" aria-modal="true" aria-labelledby="downtime-title" aria-hidden="true">
-    <div class="downtime-card">
-      <div class="downtime-icon" aria-hidden="true">🛠️</div>
-      <div class="downtime-badge"><span class="downtime-badge-dot"></span>Scheduled maintenance</div>
-      <h1 id="downtime-title">Downtime is underway.</h1>
-      <p>SWLondon Forecast is currently receiving improvements and maintenance. The website will be available again as soon as the work is complete.</p>
-      <div class="downtime-progress" aria-hidden="true"></div>
-      <div class="downtime-actions">
-        <button type="button" class="downtime-return" id="disable-downtime-button">End preview and return to website</button>
+
+  <div class="maintenance-screen" id="maintenance-screen" role="dialog" aria-modal="true" aria-labelledby="maintenance-title">
+    <main class="maintenance-card">
+      <div class="maintenance-logo" aria-hidden="true">🔧</div>
+      <div class="maintenance-badge">System maintenance</div>
+      <h1 id="maintenance-title">We’ll be back soon.</h1>
+      <p>
+        SWLondon Forecast is temporarily unavailable while improvements are being made.
+        Weather services will return as soon as the work is complete.
+      </p>
+      <div class="maintenance-progress" aria-hidden="true"><span></span></div>
+      <div class="maintenance-meta">
+        <span>Website temporarily offline</span>
+        <span>Please check again later</span>
       </div>
-      <p class="downtime-small">Weather services may be temporarily unavailable during this period.</p>
-    </div>
+    </main>
   </div>
 
   <div class="weather-particles" id="weather-particles" aria-hidden="true"></div>
@@ -3444,21 +3541,6 @@
       </div>
     </div>
 
-
-    <div class="settings-group" id="downtime-settings-group">
-      <div class="settings-group-title">Website availability</div>
-      <label class="setting-row">
-        <span class="setting-copy">
-          <strong>Downtime Screen</strong>
-          <span>Cover the website with a maintenance message until this is switched off.</span>
-        </span>
-        <span class="switch">
-          <input type="checkbox" id="downtime-setting">
-          <span class="switch-track"></span>
-        </span>
-      </label>
-    </div>
-
     <button
       type="button"
       class="reset-button"
@@ -3480,6 +3562,32 @@
   </div>
 
   <script>
+
+    /* ==========================================================
+       MAINTENANCE CONTROL
+
+       true  = visitors only see the maintenance screen
+       false = visitors see the normal website
+
+       This option is intentionally NOT shown in Settings.
+       ========================================================== */
+    const MAINTENANCE_MODE = true;
+
+    function applyMaintenanceMode() {
+      document.body.classList.toggle("maintenance-active", MAINTENANCE_MODE);
+
+      const screen = document.getElementById("maintenance-screen");
+      if (screen) {
+        screen.setAttribute("aria-hidden", String(!MAINTENANCE_MODE));
+      }
+
+      if (MAINTENANCE_MODE) {
+        document.title = "Maintenance — SWLondon Forecast";
+      }
+    }
+
+    applyMaintenanceMode();
+
     /*
       ------------------------------------------------------------
       WARNING CONFIGURATION
@@ -5492,34 +5600,6 @@ function applyTheme() {
     }, 15 * 60 * 1000);
 
     setInterval(updateTimeGlow, 60 * 1000);
-  
-    /* Downtime screen controls */
-    const downtimeScreen = document.getElementById("downtime-screen");
-    const downtimeSetting = document.getElementById("downtime-setting");
-    const disableDowntimeButton = document.getElementById("disable-downtime-button");
-
-    function setDowntimeState(enabled) {
-      localStorage.setItem("swLondonDowntime", String(enabled));
-      downtimeScreen?.classList.toggle("visible", enabled);
-      downtimeScreen?.setAttribute("aria-hidden", String(!enabled));
-      document.body.classList.toggle("downtime-active", enabled);
-      if (downtimeSetting) downtimeSetting.checked = enabled;
-    }
-
-    downtimeSetting?.addEventListener("change", event => {
-      setDowntimeState(event.target.checked);
-      if (typeof showToast === "function") {
-        showToast(event.target.checked ? "Downtime screen enabled" : "Downtime screen disabled");
-      }
-    });
-
-    disableDowntimeButton?.addEventListener("click", () => {
-      setDowntimeState(false);
-      if (typeof showToast === "function") showToast("Downtime ended");
-    });
-
-    setDowntimeState(localStorage.getItem("swLondonDowntime") === "true");
-
-</script>
+  </script>
 </body>
 </html>
