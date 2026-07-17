@@ -243,6 +243,24 @@ body.light .panel{ background: linear-gradient(155deg, rgba(255,255,255,.5), tra
   .places{ grid-template-columns:repeat(2,1fr) }
   .panel{ top:8px; right:8px; bottom:8px; left:8px; width:auto }
 }
+
+/* ============ STATUS SITE PAGE ============ */
+.status-page{position:fixed;inset:0;z-index:110;overflow-y:auto;padding:14px 16px 32px;background:var(--bg);opacity:0;visibility:hidden;transform:translateY(16px) scale(.992);transition:opacity .3s ease,visibility .3s ease,transform .35s cubic-bezier(.2,.9,.2,1)}
+.status-page.open{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+.status-page-inner{width:min(920px,100%);margin-inline:auto}
+.status-page-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;margin-bottom:16px;border-radius:999px}
+.status-page-title{display:flex;align-items:center;gap:11px}.status-page-title strong{font-family:var(--serif);font-size:1.12rem;font-weight:500}.status-page-title span{display:block;margin-top:2px;color:var(--text-3);font-size:.72rem}
+.status-frame-card{padding:8px;border-radius:var(--radius-l)}.status-frame-card iframe{display:block;width:100%;height:calc(100vh - 138px);min-height:520px;border:0;border-radius:20px;background:#fff}
+.status-fallback{margin-top:12px;text-align:center;color:var(--text-3);font-size:.75rem}.status-fallback a{color:var(--accent);font-weight:600}
+.games-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.game-rules{margin-top:11px;padding-top:10px;border-top:1px solid var(--line);color:var(--text-3);font-size:.7rem;line-height:1.5}.game-rules strong{color:var(--text-2)}
+.target-field{position:relative;height:230px;margin-top:14px;overflow:hidden;border:1px solid var(--line);border-radius:var(--radius-m);background:linear-gradient(90deg,transparent 49%,rgba(255,255,255,.18) 49%,rgba(255,255,255,.18) 51%,transparent 51%),repeating-linear-gradient(90deg,#176b40 0 16.6%,#1b7d49 16.6% 33.2%)}
+.target-button{position:absolute;left:50%;top:50%;width:54px;height:54px;display:grid;place-items:center;border:2px solid rgba(255,255,255,.9);border-radius:50%;background:rgba(15,25,40,.72);font-size:1.6rem;transform:translate(-50%,-50%);transition:left .18s ease,top .18s ease,transform .15s ease}.target-button:active{transform:translate(-50%,-50%) scale(.88)}
+.target-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}.target-readout{font-family:var(--mono);font-size:.78rem;color:var(--text-2)}
+.reaction-zone{position:relative;height:230px;margin-top:14px;display:grid;place-items:center;overflow:hidden;border:1px solid var(--line);border-radius:var(--radius-m);background:radial-gradient(circle at center,rgba(255,157,66,.18),transparent 42%),linear-gradient(180deg,rgba(90,30,150,.55),rgba(20,4,40,.92))}
+.reaction-light{width:104px;height:104px;display:grid;place-items:center;border-radius:50%;border:2px solid var(--line);background:rgba(255,255,255,.08);font-size:2.6rem;transition:.18s ease}.reaction-zone.ready .reaction-light{background:rgba(110,255,176,.88);box-shadow:0 0 36px rgba(110,255,176,.55);transform:scale(1.06)}.reaction-zone.false-start .reaction-light{background:rgba(255,126,121,.82)}
+.reaction-btn{width:100%;margin-top:12px;padding:11px;border:1px solid var(--line);border-radius:12px;background:var(--glass-strong);font-weight:600}.theme-stage .minigame{min-width:0}
+@media(max-width:720px){.games-grid{grid-template-columns:1fr}.status-page{padding:8px}.status-page-head{border-radius:22px}.status-frame-card iframe{height:calc(100vh - 126px);min-height:480px}}
+
 </style>
 </head>
 <body>
@@ -253,6 +271,9 @@ body.light .panel{ background: linear-gradient(155deg, rgba(255,255,255,.5), tra
     <div class="nav-actions">
       <button class="icon-btn" id="refresh-btn" aria-label="Refresh">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v6h-6"/></svg>
+      </button>
+      <button class="icon-btn" id="status-btn" aria-label="Status Site" title="Status Site">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><path d="M6 16V9"/><path d="M10 16V5"/><path d="M14 16v-4"/><path d="M18 16V7"/></svg>
       </button>
       <button class="icon-btn" id="settings-btn" aria-label="Settings">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.14.37.35.7.6 1 .3.28.68.43 1.1.43H21a2 2 0 1 1 0 4h-.09c-.42 0-.8.15-1.1.43-.25.29-.46.62-.6 1Z"/></svg>
@@ -321,43 +342,54 @@ body.light .panel{ background: linear-gradient(155deg, rgba(255,255,255,.5), tra
       <p id="theme-copy">A seasonal look with a quick match-day game. Turn it on in Settings.</p>
     </div>
 
-    <div class="minigame glass" id="football-game">
-      <div class="block-head" style="margin-bottom:0"><h2 style="font-size:1.1rem">Penalty shootout</h2></div>
-      <div class="pitch">
-        <div class="goal"></div>
-        <div class="keeper" id="keeper">🧤</div>
-        <div class="ball" id="ball">⚽</div>
+    <div id="football-game">
+      <div class="games-grid">
+        <article class="minigame glass">
+          <div class="block-head" style="margin-bottom:0"><h2 style="font-size:1.1rem">Penalty shootout</h2><span class="tag">Football game 1</span></div>
+          <div class="pitch"><div class="goal"></div><div class="keeper" id="keeper">🧤</div><div class="ball" id="ball">⚽</div></div>
+          <div class="shot-row"><button data-shot="left">Left</button><button data-shot="centre">Centre</button><button data-shot="right">Right</button></div>
+          <p class="game-note" id="football-note">Score: 0 · Shots: 0</p>
+          <p class="game-rules"><strong>Rules:</strong> Pick left, centre or right. You score when the goalkeeper dives to a different side. Keep playing to beat your best score.</p>
+        </article>
+        <article class="minigame glass">
+          <div class="block-head" style="margin-bottom:0"><h2 style="font-size:1.1rem">Target practice</h2><span class="tag">Football game 2</span></div>
+          <div class="target-field" id="target-field"><button class="target-button" id="football-target" type="button" aria-label="Hit the football target">⚽</button></div>
+          <div class="target-controls"><span class="target-readout" id="target-readout">Score 0 · 20s</span><button class="glass" id="target-start" type="button" style="padding:9px 13px;border-radius:11px">Start game</button></div>
+          <p class="game-rules"><strong>Rules:</strong> Press Start, then tap the moving football as many times as possible in 20 seconds. Each successful hit scores one point.</p>
+        </article>
       </div>
-      <div class="shot-row">
-        <button data-shot="left">Left</button>
-        <button data-shot="centre">Centre</button>
-        <button data-shot="right">Right</button>
+    </div>
+    <div id="wrestling-game">
+      <div class="games-grid">
+        <article class="minigame glass">
+          <div class="block-head" style="margin-bottom:0"><h2 style="font-size:1.1rem">Summer showdown</h2><span class="tag">Wrestling game 1</span></div>
+          <div class="ring"><div class="mat"></div><div class="fighter you" id="you">🤼</div><div class="fighter rival" id="rival">🥊</div></div>
+          <div class="meters"><div class="meter">You<div class="track"><div class="fill" id="you-fill" style="width:100%"></div></div></div><div class="meter">Rival<div class="track"><div class="fill" id="rival-fill" style="width:100%"></div></div></div></div>
+          <div class="move-row"><button data-move="strike">Strike</button><button data-move="grapple">Grapple</button><button data-move="block">Block</button><button id="wrestle-reset" type="button">Restart</button></div>
+          <p class="game-note" id="wrestle-note">Choose your first move.</p>
+          <p class="game-rules"><strong>Rules:</strong> Reduce your rival's health to zero. Strikes are reliable, grapples are stronger but can fail, and blocking reduces the rival's next attack.</p>
+        </article>
+        <article class="minigame glass">
+          <div class="block-head" style="margin-bottom:0"><h2 style="font-size:1.1rem">Bell reaction</h2><span class="tag">Wrestling game 2</span></div>
+          <div class="reaction-zone" id="reaction-zone"><div class="reaction-light" id="reaction-light">🔔</div></div>
+          <button class="reaction-btn" id="reaction-button" type="button">Start round</button>
+          <p class="game-note" id="reaction-note">Wait for the bell, then react.</p>
+          <p class="game-rules"><strong>Rules:</strong> Start a round and wait. Press the button only when the bell turns green. Pressing too early is a false start; faster reactions earn a better time.</p>
+        </article>
       </div>
-      <p class="game-note" id="football-note">Score: 0 · Shots: 0</p>
     </div>
 
-    <div class="minigame glass" id="wrestling-game" style="margin-top:14px">
-      <div class="block-head" style="margin-bottom:0"><h2 style="font-size:1.1rem">Summer showdown</h2></div>
-      <div class="ring">
-        <div class="mat"></div>
-        <div class="fighter you" id="you">🤼</div>
-        <div class="fighter rival" id="rival">🥊</div>
-      </div>
-      <div class="meters">
-        <div class="meter">You<div class="track"><div class="fill" id="you-fill" style="width:100%"></div></div></div>
-        <div class="meter">Rival<div class="track"><div class="fill" id="rival-fill" style="width:100%"></div></div></div>
-      </div>
-      <div class="move-row">
-        <button data-move="strike">Strike</button>
-        <button data-move="grapple">Grapple</button>
-        <button data-move="block">Block</button>
-        <button id="wrestle-reset" type="button">Restart</button>
-      </div>
-      <p class="game-note" id="wrestle-note">Choose your first move.</p>
-    </div>
   </section>
 
   <footer>Weather data from Open‑Meteo · Updates automatically every 15 minutes</footer>
+</div>
+
+<div class="status-page" id="status-page" aria-hidden="true">
+  <div class="status-page-inner">
+    <div class="status-page-head glass"><div class="status-page-title"><span class="brand-dot"></span><div><strong>Status Site</strong><span>Live service health and maintenance updates</span></div></div><button class="icon-btn" id="close-status" aria-label="Close Status Site"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="status-frame-card glass"><iframe id="status-frame" src="https://brixstudios.statuspage.io/" title="Service status site" loading="lazy"></iframe></div>
+    <p class="status-fallback">If the embedded page does not load, <a href="https://brixstudios.statuspage.io/" target="_blank" rel="noopener">open the status site in a new tab</a>.</p>
+  </div>
 </div>
 
 <div class="backdrop" id="backdrop"></div>
@@ -396,8 +428,8 @@ body.light .panel{ background: linear-gradient(155deg, rgba(255,255,255,.5), tra
 
   <div class="p-group">
     <div class="p-title">Summer event theme</div>
-    <div class="p-row"><div class="p-copy"><strong>World football</strong><span>Pitch wallpaper + penalty game</span></div><span class="switch"><input type="checkbox" id="theme-football"><i></i></span></div>
-    <div class="p-row"><div class="p-copy"><strong>Summer wrestling</strong><span>Arena wallpaper + showdown game</span></div><span class="switch"><input type="checkbox" id="theme-wrestling"><i></i></span></div>
+    <div class="p-row"><div class="p-copy"><strong>World football</strong><span>Pitch wallpaper + 2 football games</span></div><span class="switch"><input type="checkbox" id="theme-football"><i></i></span></div>
+    <div class="p-row"><div class="p-copy"><strong>Summer wrestling</strong><span>Arena wallpaper + 2 wrestling games</span></div><span class="switch"><input type="checkbox" id="theme-wrestling"><i></i></span></div>
   </div>
 
   <button class="reset-btn" id="reset-btn" type="button">Restore defaults</button>
@@ -594,10 +626,10 @@ function applyAll(){
   $("#wrestling-game").classList.toggle("hidden", settings.eventTheme!=="wrestling");
   if(settings.eventTheme==="football"){
     $("#theme-heading").textContent = "One World, One Summer";
-    $("#theme-copy").textContent = "A pitch-toned wallpaper with a quick penalty shootout below.";
+    $("#theme-copy").textContent = "A pitch-toned wallpaper with Penalty Shootout and Target Practice.";
   } else if(settings.eventTheme==="wrestling"){
     $("#theme-heading").textContent = "Summer Showdown";
-    $("#theme-copy").textContent = "An arena-toned wallpaper with a light one-on-one match below.";
+    $("#theme-copy").textContent = "An arena-toned wallpaper with Summer Showdown and Bell Reaction.";
   }
   syncPanel();
 }
@@ -692,15 +724,38 @@ document.querySelectorAll("#wrestling-game [data-move]").forEach(btn=>{
     if(rivalHP<=0){ $("#wrestle-note").textContent=text; updateWrestle(); return; }
     setTimeout(()=>{
       let rd = 8+Math.floor(Math.random()*13);
-      if(blocking) rd = Math.floor(rd*.3);
+      const wasBlocking = blocking;
+      if(wasBlocking) rd = Math.floor(rd*.3);
       youHP -= rd; blocking=false;
-      $("#wrestle-note").textContent = `${text} Rival answers for ${rd}${blocking?" (blocked)":""}.`;
+      $("#wrestle-note").textContent = `${text} Rival answers for ${rd}${wasBlocking?" (blocked)":""}.`;
       updateWrestle();
     },260);
     updateWrestle();
   });
 });
 $("#wrestle-reset").addEventListener("click", ()=>{ youHP=100; rivalHP=100; wrestleOver=false; blocking=false; $("#wrestle-note").textContent="Choose your first move."; updateWrestle(); });
+
+
+/* ---------- separate Status Site page ---------- */
+const statusPage = $("#status-page");
+$("#status-btn").addEventListener("click", ()=>{ closePanel(); statusPage.classList.add("open"); statusPage.setAttribute("aria-hidden","false"); document.body.style.overflow="hidden"; });
+$("#close-status").addEventListener("click", closeStatusPage);
+function closeStatusPage(){ statusPage.classList.remove("open"); statusPage.setAttribute("aria-hidden","true"); document.body.style.overflow=""; }
+document.addEventListener("keydown", e=>{ if(e.key==="Escape" && statusPage.classList.contains("open")) closeStatusPage(); });
+
+/* ---------- football target practice ---------- */
+let targetScore=0,targetTime=20,targetTimer=null,targetRunning=false;
+const targetButton=$("#football-target");
+function moveFootballTarget(){ targetButton.style.left=(10+Math.random()*80)+"%"; targetButton.style.top=(14+Math.random()*72)+"%"; }
+function updateTargetReadout(){ $("#target-readout").textContent=`Score ${targetScore} · ${targetTime}s`; }
+$("#target-start").addEventListener("click",()=>{ clearInterval(targetTimer); targetScore=0; targetTime=20; targetRunning=true; $("#target-start").textContent="Playing…"; updateTargetReadout(); moveFootballTarget(); targetTimer=setInterval(()=>{ targetTime--; updateTargetReadout(); if(targetTime<=0){ clearInterval(targetTimer); targetRunning=false; $("#target-start").textContent="Play again"; $("#target-readout").textContent=`Finished · Score ${targetScore}`; } },1000); });
+targetButton.addEventListener("click",()=>{ if(!targetRunning)return; targetScore++; updateTargetReadout(); moveFootballTarget(); });
+
+/* ---------- wrestling bell reaction ---------- */
+let reactionWaiting=false,reactionReady=false,reactionTimeout=null,reactionStartedAt=0;
+const reactionZone=$("#reaction-zone"),reactionBtn=$("#reaction-button"),reactionNote=$("#reaction-note");
+function resetReactionVisual(){ reactionZone.classList.remove("ready","false-start"); reactionReady=false; }
+reactionBtn.addEventListener("click",()=>{ if(reactionReady){ const result=Math.round(performance.now()-reactionStartedAt); reactionNote.textContent=`Reaction time: ${result} ms`; reactionBtn.textContent="Start another round"; clearTimeout(reactionTimeout); reactionWaiting=false; resetReactionVisual(); return; } if(reactionWaiting){ clearTimeout(reactionTimeout); reactionWaiting=false; reactionZone.classList.add("false-start"); reactionNote.textContent="False start — wait for the green bell."; reactionBtn.textContent="Try again"; setTimeout(resetReactionVisual,650); return; } resetReactionVisual(); reactionWaiting=true; reactionNote.textContent="Wait for it…"; reactionBtn.textContent="Do not press yet"; reactionTimeout=setTimeout(()=>{ reactionWaiting=false; reactionReady=true; reactionStartedAt=performance.now(); reactionZone.classList.add("ready"); reactionNote.textContent="GO! Press the button now!"; reactionBtn.textContent="Hit the bell!"; },1200+Math.random()*2600); });
 
 /* ---------- init ---------- */
 renderWarnings();
