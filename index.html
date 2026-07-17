@@ -2443,6 +2443,147 @@
       }
     }
 
+  
+    /* Extra Summer Event mini games */
+    .event-games-grid {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .event-mini-game {
+      padding: 24px;
+      border-radius: var(--radius-large);
+    }
+
+    .target-board {
+      position: relative;
+      min-height: 270px;
+      margin-top: 17px;
+      overflow: hidden;
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      background:
+        linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.02)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 70px, transparent 70px 140px),
+        linear-gradient(#14884a, #07552e);
+    }
+
+    .football-target {
+      position: absolute;
+      width: 62px;
+      height: 62px;
+      display: grid;
+      place-items: center;
+      border: 3px solid rgba(255,255,255,.9);
+      border-radius: 50%;
+      color: white;
+      font-weight: 900;
+      background: rgba(0,0,0,.24);
+      box-shadow: 0 8px 22px rgba(0,0,0,.25);
+      cursor: pointer;
+      transition: transform .18s ease;
+    }
+
+    .football-target:hover {
+      transform: scale(1.08);
+    }
+
+    .football-target.hit {
+      transform: scale(.2);
+      opacity: 0;
+    }
+
+    .wrestling-ring {
+      position: relative;
+      min-height: 270px;
+      margin-top: 17px;
+      overflow: hidden;
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      background:
+        linear-gradient(180deg, rgba(82,24,150,.78), rgba(25,2,58,.94));
+    }
+
+    .ring-mat {
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      bottom: 34px;
+      height: 118px;
+      border: 5px solid rgba(255,255,255,.86);
+      background: linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,123,0,.16));
+      box-shadow: inset 0 0 40px rgba(0,0,0,.28);
+    }
+
+    .ring-rope {
+      position: absolute;
+      left: 5%;
+      right: 5%;
+      height: 4px;
+      border-radius: 999px;
+      background: #ff8b2c;
+      box-shadow: 0 0 12px rgba(255,116,24,.65);
+    }
+
+    .ring-rope.one { bottom: 70px; }
+    .ring-rope.two { bottom: 112px; }
+    .ring-rope.three { bottom: 154px; }
+
+    .wrestler-player,
+    .wrestler-rival {
+      position: absolute;
+      bottom: 76px;
+      font-size: 3.6rem;
+      transition: left .25s ease, right .25s ease, transform .25s ease;
+      filter: drop-shadow(0 10px 12px rgba(0,0,0,.35));
+    }
+
+    .wrestler-player { left: 21%; }
+    .wrestler-rival { right: 21%; }
+
+    .wrestling-meter {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .meter-box {
+      padding: 11px;
+      border: 1px solid var(--glass-border);
+      border-radius: 15px;
+      background: var(--control-bg);
+    }
+
+    .meter-track {
+      height: 9px;
+      margin-top: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+    }
+
+    .meter-fill {
+      height: 100%;
+      width: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+      transition: width .25s ease;
+    }
+
+    .game-countdown {
+      color: var(--accent-strong);
+      font-weight: 800;
+    }
+
+    @media (max-width: 850px) {
+      .event-games-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
   </style>
 </head>
 
@@ -2711,6 +2852,63 @@
                 <div class="team"><span class="team-flag">🇫🇷</span><strong>France</strong></div>
               </div>
               <p class="match-note">A major European contest with pace, pressure and a huge-match atmosphere.</p>
+            </article>
+          </div>
+
+
+          <div class="event-games-grid" id="extra-summer-games">
+            <article class="event-mini-game glass" id="football-target-game">
+              <div class="section-label">Football mini game 2</div>
+              <h3 style="margin-top:6px;">Target Practice</h3>
+              <p class="premium-sub">Hit as many moving targets as possible before the timer reaches zero.</p>
+
+              <div class="target-board" id="target-board" aria-live="polite">
+                <button type="button" class="football-target" id="football-target" aria-label="Football target">⚽</button>
+              </div>
+
+              <div class="shot-controls">
+                <button type="button" class="glass-action" id="start-target-game">Start game</button>
+              </div>
+
+              <p class="event-mode-note">
+                Score: <strong id="target-score">0</strong>
+                · Time: <strong class="game-countdown" id="target-time">20</strong>s
+              </p>
+            </article>
+
+            <article class="event-mini-game glass" id="wrestling-mini-game">
+              <div class="section-label">Wrestling mini game</div>
+              <h3 style="margin-top:6px;">Summer Showdown</h3>
+              <p class="premium-sub">Choose attacks, protect your energy and defeat your rival before they defeat you.</p>
+
+              <div class="wrestling-ring" aria-live="polite">
+                <div class="ring-mat"></div>
+                <div class="ring-rope one"></div>
+                <div class="ring-rope two"></div>
+                <div class="ring-rope three"></div>
+                <div class="wrestler-player" id="wrestler-player">🤼</div>
+                <div class="wrestler-rival" id="wrestler-rival">🥊</div>
+              </div>
+
+              <div class="wrestling-meter">
+                <div class="meter-box">
+                  <strong>You</strong>
+                  <div class="meter-track"><div class="meter-fill" id="player-health"></div></div>
+                </div>
+                <div class="meter-box">
+                  <strong>Rival</strong>
+                  <div class="meter-track"><div class="meter-fill" id="rival-health"></div></div>
+                </div>
+              </div>
+
+              <div class="shot-controls">
+                <button type="button" class="glass-action wrestling-move" data-move="strike">Strike</button>
+                <button type="button" class="glass-action wrestling-move" data-move="grapple">Grapple</button>
+                <button type="button" class="glass-action wrestling-move" data-move="block">Block</button>
+                <button type="button" class="glass-action" id="reset-wrestling-game">Restart</button>
+              </div>
+
+              <p class="event-mode-note" id="wrestling-result">Choose your first move.</p>
             </article>
           </div>
 
@@ -4926,6 +5124,176 @@ function applyTheme() {
       });
       saveSummerEvents();
       applySummerEvents();
+
+
+    /* ===== Additional Summer Event mini games ===== */
+
+    const targetBoard = document.getElementById("target-board");
+    const footballTarget = document.getElementById("football-target");
+    const targetScoreLabel = document.getElementById("target-score");
+    const targetTimeLabel = document.getElementById("target-time");
+    const startTargetGameButton = document.getElementById("start-target-game");
+
+    let targetGameScore = 0;
+    let targetGameTime = 20;
+    let targetGameTimer = null;
+    let targetGameActive = false;
+
+    function moveFootballTarget() {
+      if (!targetBoard || !footballTarget) return;
+
+      const boardWidth = Math.max(targetBoard.clientWidth - 75, 20);
+      const boardHeight = Math.max(targetBoard.clientHeight - 75, 20);
+
+      footballTarget.style.left = `${Math.random() * boardWidth}px`;
+      footballTarget.style.top = `${Math.random() * boardHeight}px`;
+    }
+
+    function finishTargetGame() {
+      targetGameActive = false;
+      clearInterval(targetGameTimer);
+      targetGameTimer = null;
+      startTargetGameButton.disabled = false;
+      startTargetGameButton.textContent = "Play again";
+      footballTarget.style.display = "none";
+      showToast(`Target Practice finished — ${targetGameScore} points`);
+    }
+
+    startTargetGameButton?.addEventListener("click", () => {
+      clearInterval(targetGameTimer);
+      targetGameScore = 0;
+      targetGameTime = 20;
+      targetGameActive = true;
+
+      targetScoreLabel.textContent = "0";
+      targetTimeLabel.textContent = "20";
+      footballTarget.style.display = "grid";
+      footballTarget.classList.remove("hit");
+      startTargetGameButton.disabled = true;
+      startTargetGameButton.textContent = "Game running";
+
+      moveFootballTarget();
+
+      targetGameTimer = setInterval(() => {
+        targetGameTime -= 1;
+        targetTimeLabel.textContent = String(targetGameTime);
+
+        if (targetGameTime <= 0) {
+          finishTargetGame();
+        }
+      }, 1000);
+    });
+
+    footballTarget?.addEventListener("click", () => {
+      if (!targetGameActive) return;
+
+      targetGameScore += 1;
+      targetScoreLabel.textContent = String(targetGameScore);
+      footballTarget.classList.add("hit");
+
+      setTimeout(() => {
+        footballTarget.classList.remove("hit");
+        moveFootballTarget();
+      }, 120);
+    });
+
+    let playerHealthValue = 100;
+    let rivalHealthValue = 100;
+    let wrestlingGameOver = false;
+    let playerBlocking = false;
+
+    const playerHealthBar = document.getElementById("player-health");
+    const rivalHealthBar = document.getElementById("rival-health");
+    const wrestlingResult = document.getElementById("wrestling-result");
+    const wrestlerPlayer = document.getElementById("wrestler-player");
+    const wrestlerRival = document.getElementById("wrestler-rival");
+
+    function updateWrestlingGame() {
+      playerHealthBar.style.width = `${Math.max(playerHealthValue, 0)}%`;
+      rivalHealthBar.style.width = `${Math.max(rivalHealthValue, 0)}%`;
+
+      if (rivalHealthValue <= 0) {
+        wrestlingGameOver = true;
+        wrestlingResult.textContent = "You win the Summer Showdown! 🏆";
+        showToast("You won the wrestling mini game");
+      } else if (playerHealthValue <= 0) {
+        wrestlingGameOver = true;
+        wrestlingResult.textContent = "Your rival wins. Press Restart for another match.";
+      }
+    }
+
+    function animateWrestlingMove(attacker, direction) {
+      attacker.style.transform = `translateX(${direction}px) scale(1.12)`;
+      setTimeout(() => {
+        attacker.style.transform = "translateX(0) scale(1)";
+      }, 230);
+    }
+
+    document.querySelectorAll(".wrestling-move").forEach(button => {
+      button.addEventListener("click", () => {
+        if (wrestlingGameOver) return;
+
+        const move = button.dataset.move;
+        playerBlocking = move === "block";
+
+        let playerDamage = 0;
+        let moveText = "";
+
+        if (move === "strike") {
+          playerDamage = 10 + Math.floor(Math.random() * 11);
+          moveText = `You landed a strike for ${playerDamage} damage.`;
+          animateWrestlingMove(wrestlerPlayer, 38);
+        } else if (move === "grapple") {
+          const successful = Math.random() > 0.35;
+          playerDamage = successful ? 17 + Math.floor(Math.random() * 12) : 0;
+          moveText = successful
+            ? `Successful grapple! ${playerDamage} damage.`
+            : "The rival escaped your grapple.";
+          animateWrestlingMove(wrestlerPlayer, 52);
+        } else {
+          moveText = "You prepared to block the rival's attack.";
+        }
+
+        rivalHealthValue -= playerDamage;
+
+        if (rivalHealthValue <= 0) {
+          wrestlingResult.textContent = moveText;
+          updateWrestlingGame();
+          return;
+        }
+
+        setTimeout(() => {
+          let rivalDamage = 8 + Math.floor(Math.random() * 13);
+
+          if (playerBlocking) {
+            rivalDamage = Math.floor(rivalDamage * 0.3);
+          }
+
+          playerHealthValue -= rivalDamage;
+          animateWrestlingMove(wrestlerRival, -38);
+
+          wrestlingResult.textContent =
+            `${moveText} Rival answered for ${rivalDamage} damage${playerBlocking ? " through your block" : ""}.`;
+
+          playerBlocking = false;
+          updateWrestlingGame();
+        }, 280);
+
+        updateWrestlingGame();
+      });
+    });
+
+    document.getElementById("reset-wrestling-game")?.addEventListener("click", () => {
+      playerHealthValue = 100;
+      rivalHealthValue = 100;
+      wrestlingGameOver = false;
+      playerBlocking = false;
+      wrestlingResult.textContent = "Choose your first move.";
+      updateWrestlingGame();
+    });
+
+    updateWrestlingGame();
+
     }
 
     function applySummerEvents() {
@@ -4954,11 +5322,15 @@ function applyTheme() {
       const slamCard = document.getElementById("slam-event-card");
       const matches = document.getElementById("summer-match-cards");
       const miniGame = document.getElementById("world-cup-mini-game");
+      const footballTargetGame = document.getElementById("football-target-game");
+      const wrestlingMiniGame = document.getElementById("wrestling-mini-game");
 
       if (worldCard) worldCard.style.display = summerEventSettings.summerSlamTheme ? "none" : "";
       if (slamCard) slamCard.style.display = summerEventSettings.worldCupTheme ? "none" : "";
       if (matches) matches.style.display = summerEventSettings.worldCupTheme ? "grid" : "none";
       if (miniGame) miniGame.style.display = summerEventSettings.worldCupTheme ? "block" : "none";
+      if (footballTargetGame) footballTargetGame.style.display = summerEventSettings.worldCupTheme ? "block" : "none";
+      if (wrestlingMiniGame) wrestlingMiniGame.style.display = summerEventSettings.summerSlamTheme ? "block" : "none";
     }
 
     document.getElementById("summer-theme-setting")?.addEventListener("change", event => {
